@@ -1,0 +1,8 @@
+127.0.0.1 - - [22/Jan/2015:06:54:42 +0000] "GET / HTTP/1.1" 200 4711 "http://apple.com/" "Ruby"
+127.0.0.1 - - [22/Jan/2015:07:54:42 +0000] "GET / HTTP/1.1" 200 4711 "http://microsoft.com/" "Ruby"
+127.0.0.1 - - [22/Jan/2015:08:54:42 +0000] "GET / HTTP/1.1" 200 4711 "http://google.com/" "Ruby"
+127.0.0.1 - - [22/Jan/2015:09:54:42 +0000] "GET / HTTP/1.1" 200 4711 "http://mattgemmell.scot/" "Ruby"
+127.0.0.1 - - [22/Jan/2015:10:54:42 +0000] "GET / HTTP/1.1" 200 4711 "http://www.amazon.com/dp/B00MWQR3UU" "Ruby"
+127.0.0.1 - - [22/Jan/2015:11:54:42 +0000] "GET / HTTP/1.1" 200 4711 "http://fanfiction.net/" "Ruby"
+127.0.0.1 - - [22/Jan/2015:12:54:42 +0000] "GET / HTTP/1.1" 200 4711 "http://snp.org/" "Ruby"
+127.0.0.1 - - [22/Jan/2015:13:54:42 +0000] "GET / HTTP/1.1" 200 4711 "http://guardian.co.uk/" "Ruby"
