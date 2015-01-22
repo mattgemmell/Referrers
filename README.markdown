@@ -57,6 +57,11 @@ That thing you were hoping it did. Error checking. Any kind of counting of the m
 Nope. I run it on my local machine, and so should you.
 
 
+## What does the default report look like?
+
+There's a sample one included. It's very simple and readable.
+
+
 ## Who made it?
 
 Matt Gemmell (that's me).
