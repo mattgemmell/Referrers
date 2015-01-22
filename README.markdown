@@ -61,7 +61,7 @@ Nope. I run it on my local machine, and so should you.
 
 Matt Gemmell (that's me).
 
-- My website is at [mattgemmell.com](mattgemmell.com)
+- My website is at [mattgemmell.com](http://mattgemmell.com)
 
 - I'm on Twitter as [@mattgemmell](http://twitter.com/mattgemmell)
 
