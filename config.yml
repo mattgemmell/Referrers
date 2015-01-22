@@ -1,0 +1,5 @@
+template_tags:
+    site_title: "Matt Gemmell's blog"
+    footer_credit: "Made with Matt's Referrers script!"
+    twitter_username: "mattgemmell"
+date_format_string: "%d %b %Y"

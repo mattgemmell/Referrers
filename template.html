@@ -1,0 +1,29 @@
+<html>
+	<head>
+
+		<title>Referrers for {% site_title %}</title>
+		<link rel="stylesheet" href="styles.css" media="screen" type="text/css">
+
+	</head>
+	<body>
+	
+		<h1>Referrers for {% site_title %}</h1>
+		
+		<div id="header">
+			{% start_date %} - {% end_date %}
+		</div>
+
+		{% row %}
+		<p>
+			<a href="{% url %}" target="_blank">{% url %}</a>
+		</p>
+		{% endrow %}
+		
+		<hr />
+		
+		<footer>
+			<a href="http://mattgemmell.com/">{% footer_credit %}</a> - <a href="http://twitter.com/{% twitter_username %}">Follow me on Twitter</a>
+		</footer>
+
+	</body>
+</html>

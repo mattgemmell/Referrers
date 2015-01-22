@@ -1,0 +1,35 @@
+html {
+	font-family: Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+body {
+	margin: 1rem 2rem;
+	font-size: 2rem;
+}
+
+a {
+	color: #06f;
+}
+
+a:visited {
+	color: #aaa;
+}
+
+h1 {
+	font-size: 3rem;
+}
+
+#header {
+	font-weight: bold;
+	margin-bottom: 4rem;
+}
+
+hr {
+	margin-top: 4rem;
+}
+
+footer {
+	margin: 2rem 0;
+	font-size: 1.8rem;
+}
