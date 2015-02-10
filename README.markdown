@@ -110,7 +110,7 @@ Good one.
 
 Hypothetically, you can:
 
-- [Support my writing](https://www.patreon.com/mattgemmell).
+- [Support my writing](http://mattgemmell.com/support-me/).
 
 - Check out [my Amazon wishlist](http://www.amazon.co.uk/registry/wishlist/1BGIQ6Z8GT06F).
 
