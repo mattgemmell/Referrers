@@ -195,7 +195,7 @@ referrers.each { |ref_url|
 	excluded = false
 	exclusions.each { |excl_pattern|
 		# Create regexp from pattern
-		excl_regexp = Regexp.new(excl_pattern.strip);
+		excl_regexp = Regexp.new(excl_pattern.strip, Regexp::IGNORECASE);
 		# Check for a match
 		if (ref_url =~ excl_regexp)
 			#puts "Excluding #{ref_url}; matches #{excl_pattern}"
@@ -229,24 +229,24 @@ delim_post_pattern = "\s*#{config["tag_end_delimiter"]}"
 
 # Obtain pre-rows chunk
 row_start_tag_pattern = "#{delim_pre_pattern}#{config["row_start_tag"]}#{delim_post_pattern}"
-pre_rows_regexp = Regexp.new("(^.*)#{row_start_tag_pattern}", Regexp::MULTILINE);
+pre_rows_regexp = Regexp.new("(^.*)#{row_start_tag_pattern}", Regexp::MULTILINE | Regexp::IGNORECASE);
 template_pre_rows_chunk = template_raw_contents.match(pre_rows_regexp)[1]
 report_chunks.push template_pre_rows_chunk
 
 # Obtain repeating row chunk, WITHOUT delimiters
 row_end_tag_pattern = "#{delim_pre_pattern}#{config["row_end_tag"]}#{delim_post_pattern}"
-row_regexp = Regexp.new("#{row_start_tag_pattern}(.*)#{row_end_tag_pattern}", Regexp::MULTILINE);
+row_regexp = Regexp.new("#{row_start_tag_pattern}(.*)#{row_end_tag_pattern}", Regexp::MULTILINE | Regexp::IGNORECASE);
 template_row_repeating_chunk = template_raw_contents.match(row_regexp)[1]
 
 # Assemble row chunks, with substituted URLs
 url_tag_pattern = "#{delim_pre_pattern}#{config["result_url_tag"]}#{delim_post_pattern}"
-url_regexp = Regexp.new(url_tag_pattern)
+url_regexp = Regexp.new(url_tag_pattern, Regexp::IGNORECASE)
 filtered_referrers.each { |ref_url|
 	report_chunks.push template_row_repeating_chunk.gsub(url_regexp, ref_url)
 }
 
 # Obtain post-rows chunk
-post_rows_regexp = Regexp.new("#{row_end_tag_pattern}(.*$)", Regexp::MULTILINE)
+post_rows_regexp = Regexp.new("#{row_end_tag_pattern}(.*$)", Regexp::MULTILINE | Regexp::IGNORECASE)
 template_post_rows_chunk = template_raw_contents.match(post_rows_regexp)[1]
 report_chunks.push template_post_rows_chunk
 
@@ -255,15 +255,15 @@ report_contents = report_chunks.join()
 # Replace start-date tags
 start_date_tag_pattern = "#{delim_pre_pattern}#{config["start_date_tag"]}#{delim_post_pattern}"
 date_format_string = config["date_format_string"]
-start_date_regexp = Regexp.new(start_date_tag_pattern)
+start_date_regexp = Regexp.new(start_date_tag_pattern, Regexp::IGNORECASE)
 report_contents = report_contents.gsub(start_date_regexp, start_date.strftime(config["date_format_string"]))
 # Replace end-date tags
 end_date_tag_pattern = "#{delim_pre_pattern}#{config["end_date_tag"]}#{delim_post_pattern}"
-end_date_regexp = Regexp.new(end_date_tag_pattern)
+end_date_regexp = Regexp.new(end_date_tag_pattern, Regexp::IGNORECASE)
 report_contents = report_contents.gsub(end_date_regexp, end_date.strftime(config["date_format_string"]))
 # Replace the user's template tags
 config[template_tags_key].each { |key, val|
-	tag_regexp = Regexp.new("#{delim_pre_pattern}#{key}#{delim_post_pattern}")
+	tag_regexp = Regexp.new("#{delim_pre_pattern}#{key}#{delim_post_pattern}", Regexp::IGNORECASE)
 	report_contents = report_contents.gsub(tag_regexp, val)
 }
 
