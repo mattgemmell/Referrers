@@ -1,7 +1,8 @@
 #!/usr/bin/ruby
 
 # Referrers
-version = "1.0.1" # 2016-01-27
+version = "1.0.2" # 2016-01-28
+#version = "1.0.1" # 2016-01-27
 #version = "1.0.0" # 2015-01-22
 # 
 # This script processes Apache / NCSA combined access logs, and finds referrers.
@@ -9,18 +10,18 @@ version = "1.0.1" # 2016-01-27
 # 
 # Made by Matt Gemmell - mattgemmell.com - @mattgemmell
 # 
-# Github: http://github.com/mattgemmell/Referrers
+github_url = "http://github.com/mattgemmell/Referrers"
 # 
 # Requirements: just Ruby itself, and its standard library.
 
 
 # Defaults
 config_file = "config.yml" #YAML file
-exclusions_file = "exclusions.cfg" # Plain text file. Regexps, one per line.
 input_file = "*.log*" # Filename, or shell glob pattern.
+exclusions_file = "exclusions.cfg" # Plain text file. Regexps, one per line.
 template_file = "template.html" # Text file of any kind.
-newest_first = true # i.e. reverse chronological order
 output_file = "report.html"
+newest_first = true # i.e. reverse chronological order
 
 
 # Internal stuff for the template.
@@ -45,15 +46,15 @@ OptionParser.new do |opts|
               "Use CONFIG as the configuration file") do |config|
               config_file = config;
 	end
-	
-	opts.on("-e", "--exclusions EXCLUSIONS",
-              "Use EXCLUSIONS as the exclusions file") do |exclusions|
-		  exclusions_file = exclusions;
-	end
 
 	opts.on("-i", "--input INPUT",
               "Use INPUT as the input file, or file(s) pattern") do |input|
 		  input_file = input;
+	end
+	
+	opts.on("-e", "--exclusions EXCLUSIONS",
+              "Use EXCLUSIONS as the exclusions file") do |exclusions|
+		  exclusions_file = exclusions;
 	end
 	
 	opts.on("-t", "--template TEMPLATE",
@@ -66,8 +67,22 @@ OptionParser.new do |opts|
               output_file = output;
 	end
 	
-	opts.on("-f", "--oldest-first", "Sort oldest first") do
+	opts.on("-f", "--oldest-first", "Sort oldest first (omit for newest first)") do
 		newest_first = false
+	end
+	
+	opts.on("-C", "--list-config", "Lists current configuration values") do
+		puts <<END
+#{$0} version #{version} ~ #{github_url}
+
+Config YAML file: #{config_file} (-c)
+Input log(s) filename/pattern: #{input_file} (-i)
+Excluded referrers list file: #{exclusions_file} (-e)
+Report template file: #{template_file} (-t)
+Report output file: #{output_file} (-o)
+Sort order: #{newest_first ? "newest" : "oldest"} first (-f for oldest first)
+END
+		exit
 	end
 	
 	opts.on("-v", "--version", "Shows the version") do

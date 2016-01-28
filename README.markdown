@@ -5,7 +5,7 @@ by [Matt Gemmell](http://mattgemmell.com/)
 
 ## What is it?
 
-It's a Ruby script that processes Apache access logs, and spits out a list of referrers (sites that linked to your site).
+It's a Ruby script that processes Apache or NCSA "combined" server logs, and spits out a list of referrers (sites that linked to your site).
 
 
 ## What are its requirements?
@@ -15,7 +15,7 @@ Just Ruby itself.
 
 ## What does it do?
 
-It reads Apache access logs, and generates a report file showing any referring URLs. They're not broken down by frequency, destination page, or anything. This is strictly for casual vanity purposes.
+It reads Apache or NCSA "combined" server logs, and generates a report file showing any referring URLs. They're not broken down by frequency, destination page, or anything. This is strictly for casual vanity purposes.
 
 Here's some interesting stuff:
 
@@ -36,7 +36,7 @@ That's about it.
 
 ## How do I use it?
 
-Just put your access logs in the same directory (by default, it looks for files with names beginning "access.log"), and then do `ruby referrers.rb`.
+Just put your server logs in the same directory (by default, it looks for files with names containing ".log"), and then do `ruby referrers.rb`.
 
 You can use the `-h` switch to learn about a few useful options.
 
@@ -49,7 +49,7 @@ You can customise the script's behaviour via the configuration file, command lin
 
 ## What _doesn't_ it do?
 
-That thing you were hoping it did. Error checking. Any kind of counting of the most popular referrers. And anything I've not explicitly said that it _does_ do.
+That thing you were hoping it did. Any kind of counting of the most popular referrers. And anything I've not explicitly said that it _does_ do.
 
 
 ## Should I run it on my server?
@@ -87,13 +87,6 @@ But, Analytics doesn't have a great referrers view, and that's what I'm most int
 I didn't find anything suitably simple yet customisable, so I made this.
 
 
-## The code is horrible
-
-Probably. It's just for my personal use. I'm not a developer or anything.
-
-So's your face.
-
-
 ## Can you provide support?
 
 Nope. If you find a bug, please fix it and submit a pull request via github.
@@ -101,14 +94,12 @@ Nope. If you find a bug, please fix it and submit a pull request via github.
 
 ## I have a feature request
 
-Shh.
+Feel free to [create an issue](https://github.com/mattgemmell/Referrers/issues) with your idea.
 
 
 ## How can I thank you?
 
-Good one.
-
-Hypothetically, you can:
+You can:
 
 - [Support my writing](http://mattgemmell.com/support-me/).
 
