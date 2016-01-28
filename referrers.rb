@@ -1,9 +1,10 @@
 #!/usr/bin/ruby
 
 # Referrers
-version = "1.0.0" # 2015-01-22
+version = "1.0.1" # 2016-01-27
+#version = "1.0.0" # 2015-01-22
 # 
-# This script processes Apache access logs, and finds referrers.
+# This script processes Apache / NCSA combined access logs, and finds referrers.
 # Output is via a template file (HTML by default).
 # 
 # Made by Matt Gemmell - mattgemmell.com - @mattgemmell
@@ -16,7 +17,7 @@ version = "1.0.0" # 2015-01-22
 # Defaults
 config_file = "config.yml" #YAML file
 exclusions_file = "exclusions.cfg" # Plain text file. Regexps, one per line.
-input_file = "access.log*" # Filename, or shell glob pattern.
+input_file = "*.log*" # Filename, or shell glob pattern.
 template_file = "template.html" # Text file of any kind.
 newest_first = true # i.e. reverse chronological order
 output_file = "report.html"
@@ -78,7 +79,12 @@ end.parse!
 
 # Load external config file
 require "yaml"
-config = YAML::load_file(config_file)
+config = {}
+if File.exist?(config_file)
+	config = YAML::load_file(config_file)
+else
+	puts "Couldn't find the config file \"#{config_file}\". Using default settings."
+end
 
 
 # Allow config file to override internal values
@@ -109,10 +115,18 @@ if (!config["date_format_string"])
 end
 
 
+# Ensure we have a template file to work with
+if !File.exist?(template_file)
+	puts "Couldn't find template file \"#{template_file}\". Aborting."
+	exit
+end
+
+
 # Load relevant log file(s)
 raw_content = []
 log_files = []
 file_counter = 0;
+puts "Searching #{Dir.pwd} for log files matching \"#{input_file}\"..."
 Dir.glob(input_file) {|file|
 	file_counter += 1
 	log_files.push file
@@ -122,7 +136,13 @@ Dir.glob(input_file) {|file|
 		end
 	end
 }
-puts "Loaded #{file_counter} log file(s) (#{log_files.join(", ")})"
+if file_counter > 0
+	puts "Loaded #{file_counter} log file(s) (#{log_files.join(", ")})"
+else
+	puts "Couldn't find any log files matching pattern \"#{input_file}\"."
+	puts "Aborting."
+	exit
+end
 
 
 # Extract just the entries with a referrer
@@ -179,36 +199,41 @@ puts "There are #{referrers.count} unique referrers."
 
 
 # Process the external exclusions file
-# Load the exclusions
-exclusions = []
-File.open(exclusions_file, 'r') do |excl_file|
-	while line = excl_file.gets
-		if (line != "\n")
-			exclusions.push line
+filtered_referrers = []
+if File.exist?(exclusions_file)
+	# Load the exclusions
+	exclusions = []
+	File.open(exclusions_file, 'r') do |excl_file|
+		while line = excl_file.gets
+			if (line != "\n")
+				exclusions.push line
+			end
 		end
 	end
-end
-puts "Loaded #{exclusions.count} exclusion patterns."
-# Filter each referral URL against all exclusions
-filtered_referrers = []
-referrers.each { |ref_url|
-	excluded = false
-	exclusions.each { |excl_pattern|
-		# Create regexp from pattern
-		excl_regexp = Regexp.new(excl_pattern.strip, Regexp::IGNORECASE);
-		# Check for a match
-		if (ref_url =~ excl_regexp)
-			#puts "Excluding #{ref_url}; matches #{excl_pattern}"
-			excluded = true
-			break
+	puts "Loaded #{exclusions.count} exclusion patterns."
+	# Filter each referral URL against all exclusions
+	referrers.each { |ref_url|
+		excluded = false
+		exclusions.each { |excl_pattern|
+			# Create regexp from pattern
+			excl_regexp = Regexp.new(excl_pattern.strip, Regexp::IGNORECASE);
+			# Check for a match
+			if (ref_url =~ excl_regexp)
+				#puts "Excluding #{ref_url}; matches #{excl_pattern}"
+				excluded = true
+				break
+			end
+		}
+		if (!excluded)
+			filtered_referrers.push ref_url
 		end
 	}
-	if (!excluded)
-		filtered_referrers.push ref_url
-	end
-}
-puts "Excluded #{referrers.count - filtered_referrers.count} referrers."
-puts "There are #{filtered_referrers.count} qualifying referrers."
+	puts "Excluded #{referrers.count - filtered_referrers.count} referrers."
+	puts "There are #{filtered_referrers.count} qualifying referrers."
+else
+	filtered_referrers = referrers
+	puts "Couldn't find the exclusions file \"#{exclusions_file}\". Not excluding any referrers."
+end
 
 
 # Generate output via template and tags
@@ -262,10 +287,12 @@ end_date_tag_pattern = "#{delim_pre_pattern}#{config["end_date_tag"]}#{delim_pos
 end_date_regexp = Regexp.new(end_date_tag_pattern, Regexp::IGNORECASE)
 report_contents = report_contents.gsub(end_date_regexp, end_date.strftime(config["date_format_string"]))
 # Replace the user's template tags
-config[template_tags_key].each { |key, val|
-	tag_regexp = Regexp.new("#{delim_pre_pattern}#{key}#{delim_post_pattern}", Regexp::IGNORECASE)
-	report_contents = report_contents.gsub(tag_regexp, val)
-}
+if config[template_tags_key]
+	config[template_tags_key].each { |key, val|
+		tag_regexp = Regexp.new("#{delim_pre_pattern}#{key}#{delim_post_pattern}", Regexp::IGNORECASE)
+		report_contents = report_contents.gsub(tag_regexp, val)
+	}
+end
 
 
 # Output the resulting report
@@ -274,4 +301,3 @@ File.open(output_file, 'w') do |outfile|
 end
 puts "Report created: \"#{output_file}\"."
 puts "Done."
-
